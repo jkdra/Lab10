@@ -24,6 +24,7 @@ int main() {
     int optionInt;             // INPUT - the user's choice
     Person* head = nullptr;    // OUTPUT - the head of the list
     Person* person = nullptr;  // OUTPUT - the person to be added to the list
+    string name;
 
     printHeader();
 
@@ -40,7 +41,6 @@ int main() {
         << "0 - to Exit" << endl
         << "Enter a command (0 to exit): ";
         cin >> optionInt;
-        ;
 
         if (cin.fail()) {
             cin.clear();
@@ -51,48 +51,31 @@ int main() {
             cin.ignore();
             cout << "**** The number " << optionInt << " is an invalid entry     ****" << endl;
             cout << "**** Please input a number between 0 and 6 ****" << endl;
-        }
+        } else option = static_cast<MenuOption>(optionInt);
 
-        option = static_cast<MenuOption>(optionInt);
+
         switch (optionInt) {
             case CREATE_LIST:
-                createList();
+                createList(head);
                 break;
             case DISPLAY_LIST:
-                displayList(createList());
+                displayList(head);
                 break;
             case CHECK_EMPTY:
-                if (isEmpty(createList())) {
-                    cout << "**** The list is empty ****" << endl;
-                } else {
-                    cout << "**** The list is not empty ****" << endl;
-                }
+                if (isEmpty(head)) cout << "Yes, the list is empty." << endl;
+                else cout << "No, the list is NOT empty." << endl;
                 break;
             case SEARCH_BY_NAME:
-                cout << "Enter the name to search for: ";
-                string name;
-                cin >> name;
-                Person* person = searchByName(createList(), name);
-                if (person == nullptr) {
-                    cout << "**** The name " << name << " was not found ****" << endl;
-                } else {
-                    cout << "**** The name " << name << " was found ****" << endl;
-                    cout << "**** The person's name is " << person->name << " ****" << endl;
-                    cout << "**** The person's gender is " << person->gender << " ****" << endl;
-                    cout << "**** The person's age is " << person->age << " ****" << endl;
-                }
+                searchByName(head);
                 break;
             case REMOVE_NODE:
-                cout << "Enter the name of the person to remove: ";
-                string nameToRemove;
-                cin >> nameToRemove;
-                removeNode(createList(), nameToRemove);
+                removeNode(head);
                 break;
             case CLEAR_LIST:
-                clearList(createList());
+                clearList(head);
                 break;
             case EXIT:
-                cout << "**** Exiting the program ****" << endl;
+                // Do nothing, program will exit
                 break;
         }
     } while (option != EXIT);

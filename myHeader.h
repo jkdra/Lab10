@@ -62,14 +62,14 @@ bool isEmpty(Person* head);
  *
  * searches for a person by name
  */
-Person* searchByName(Person* head, string name);
+void searchByName(Person* head);
 
 /*
  * removeNode
  *
  * removes a node from the list
  */
-void removeNode(Person* head, string name);
+void removeNode(Person* head);
 
 /*
  * clearList
