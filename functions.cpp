@@ -12,16 +12,14 @@ using namespace std;
  * creates a list of nodes
  */
 void createList(Person*& head) {
-    ifstream inFile("InFile.txt");  // INPUT - the file to be read
-    string name;                      // INPUT - the name of the person
-    char gender;                      // INPUT - the gender of the person
-    int age;                          // INPUT - the age of the person
+    ifstream inFile;    // INPUT - the file to be read
+    string name;        // INPUT - the name of the person
+    char gender;        // INPUT - the gender of the person
+    int age;            // INPUT - the age of the person
+    bool swapped;       // FLAG - true if the list was swapped
 
-    // Check first.
-    if (isEmpty(head)) {
-        cout << "\nList already created.\n";
-        return;
-    }
+    // Initialize the input file.
+    inFile.open("InFile.txt");
 
     while (!inFile.eof()) {
         getline(inFile, name);
@@ -33,6 +31,7 @@ void createList(Person*& head) {
 
         cout << endl << " Adding : " << name;
 
+        // Create the objects
         Person* personPtr = new Person;
         personPtr->name = name;
         personPtr->gender = gender;
@@ -43,7 +42,25 @@ void createList(Person*& head) {
         head = personPtr;
     }
 
+    cout << "\n";
     inFile.close();
+
+    // Now to order the list alphabetically. (Currently, it's ordered by when it was last created.)
+    do {
+        swapped = false;
+        Person* current = head;
+
+        while (current->next != nullptr) {
+            if (current->name > current->next->name) {
+                // Swap the contents of the current node and the next node
+                swap(current->name, current->next->name);
+                swap(current->gender, current->next->gender);
+                swap(current->age, current->next->age);
+                swapped = true;
+            }
+            current = current->next;
+        }
+    } while (swapped);
 }
 
 /* displayList
@@ -51,24 +68,24 @@ void createList(Person*& head) {
  * prints the list
  */
 void displayList(Person* head) {
-    int count = 0;         // OUTPUT - the number of nodes in the list
+    int count = 1;         // OUTPUT - the number of nodes in the list
     Person* person = head; // INPUT - the head of the list
 
-    if (isEmpty(head)) cout << "\nCan't display an empty list\n\n";
-    else {
-        cout
-            << "\n   #    NAME                       GENDER   AGE "
-            << "\n------- ------------------------- -------- -----";
 
-        while (person != nullptr) {
-            cout << "\n" << right << setw(4) << count++ << "   "
-            << " " << left << setw(25) << person->name
-            << " " << right << setw(4) << person->gender << "    "
-            << " " << setw(3) << person->age;
 
-            person = person->next;
-        }
+    cout
+    << "\n   #    NAME                       GENDER   AGE "
+    << "\n------- ------------------------- -------- -----";
+
+    while (person != nullptr) {
+        cout << "\n" << right << setw(4) << count++ << "   "
+        << " " << left << setw(25) << person->name
+        << " " << right << setw(4) << person->gender << "    "
+        << " " << setw(3) << person->age;
+        person = person->next;
     }
+
+    cout << "\n";
 }
 
 /* isEmpty
@@ -86,48 +103,50 @@ void searchByName(Person* head) {
     string name;            // INPUT - Name search
     Person* person = head;  // INPUT - person list
 
+    cin.clear(); // Make sure it's clear before getting input
+    cin.ignore(); // Also get rid of any newline
 
-    cout << "Who would you like to search for? ";
+    cout << "\nWho would you like to search for? ";
     getline(cin, name);
 
-    cout << "Searching for " << name << "...";
+    cout << "\nSearching for " << name << "...";
 
-    if (head == nullptr) cout << "I'm sorry, \"" << head->name << "\" was not found.";
-    else {
-        cout
-        << "\n\nName: " << head->name
-        << "\nGender: " << head->gender
-        << "\nAge: " << head->age << endl;
+
+
+    while (person != nullptr) {
+        if (person->name == name) {
+            cout
+            << "\n\nName:   " << person->name
+            << "\nGender: " << person->gender
+            << "\nAge:    " << person->age << endl;
+            break;
+        }
+        person = person->next;
     }
 
-    while (person != nullptr) person = person->next;
+    if (person == nullptr) cout << "\nI'm sorry, \"" << name << "\" was NOT found!\n";
 }
 
 /* removeNode
  *
  * removes a node from the list
  */
-void removeNode(Person* head) {
+void removeNode(Person*& head) {
 
     string nameInput;         // INPUT - the name of the person to be removed
     Person* person = head;    // INPUT - the head of the list
     Person* prev = nullptr;   // OUTPUT - the previous node
 
-    if (isEmpty(head)) {
-        cout << "\nCan't remove a node from an empty list\n\n";
-        return;
-    }
-
-    cout << "Who would you like to remove? ";
+    // Clear the input buffer and ignore any newline
+    cin.clear();
+    cin.ignore();
+    cout << "\nWho would you like to remove? ";
     getline(cin, nameInput);
 
-    cout << "Searching for " << nameInput << "...";
+    cout << "\nSearching for " << nameInput << "...";
 
-    if (cin.fail()) {
-        cin.clear();
-        cin.ignore();
-        cout << "**** Please input a NAME ****" << endl;
-    } else if (nameInput.empty()) cout << "**** Please input a NAME ****" << endl;
+    if (cin.fail()) cout << "\n**** Please input a NAME ****\n" << endl;
+    else if (nameInput.empty()) cout << "\n**** Please input a NAME ****\n" << endl;
     else {
         while (person != nullptr) {
             if (person->name == nameInput) {
@@ -141,6 +160,8 @@ void removeNode(Person* head) {
             person = person->next;
         }
     }
+
+    if (person == nullptr) cout << "\nI'm sorry, \"" << nameInput << "\" was NOT found!\n";
 }
 
 /*
@@ -148,7 +169,7 @@ void removeNode(Person* head) {
  *
  * clears the list
  */
-void clearList(Person* head) {
+void clearList(Person*& head) {
     Person* person = head;    // INPUT - the head of the list
 
     cout << "CLEARING LIST:" << endl;
@@ -159,6 +180,6 @@ void clearList(Person* head) {
         person = next;
     }
 
-    cout << "\n\nThe list has been cleared.\n" << endl;
+    cout << "\n\nThe list has been cleared!\n" << endl;
     head = nullptr;
 }

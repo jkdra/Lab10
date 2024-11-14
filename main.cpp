@@ -30,7 +30,7 @@ int main() {
 
     do {
         cout
-        << "\n\n"
+        << "\n"
         << "LIST MENU:" << endl
         << "1 - Create List" << endl
         << "2 - Display List" << endl
@@ -56,23 +56,28 @@ int main() {
 
         switch (optionInt) {
             case CREATE_LIST:
-                createList(head);
+                if (!isEmpty(head)) cout << "\nList already created.\n";
+                else createList(head);
                 break;
             case DISPLAY_LIST:
-                displayList(head);
+                if (isEmpty(head)) cout << "\nCan't display an empty list\n";
+                else displayList(head);
                 break;
             case CHECK_EMPTY:
                 if (isEmpty(head)) cout << "Yes, the list is empty." << endl;
                 else cout << "No, the list is NOT empty." << endl;
                 break;
             case SEARCH_BY_NAME:
-                searchByName(head);
+                if (isEmpty(head)) cout << "Can't search an empty list" << endl;
+                else searchByName(head);
                 break;
             case REMOVE_NODE:
-                removeNode(head);
+                if (!isEmpty(head)) removeNode(head);
+                else cout << "\nCan't remove from an empty list!\n";
                 break;
             case CLEAR_LIST:
-                clearList(head);
+                if (isEmpty(head)) cout << "\nThe list has been cleared!\n";
+                else clearList(head);
                 break;
             case EXIT:
                 // Do nothing, program will exit

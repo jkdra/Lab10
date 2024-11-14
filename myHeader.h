@@ -69,13 +69,13 @@ void searchByName(Person* head);
  *
  * removes a node from the list
  */
-void removeNode(Person* head);
+void removeNode(Person*& head);
 
 /*
  * clearList
  *
  * clears the list
  */
-void clearList(Person* head);
+void clearList(Person*& head);
 
 #endif //MYHEADER_H
